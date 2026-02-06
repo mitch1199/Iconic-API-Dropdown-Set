@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, json
 from rapidfuzz import fuzz
 from decimal import Decimal, ROUND_HALF_UP
 from xml.etree.ElementTree import Element, SubElement, tostring
@@ -48,7 +48,10 @@ if __name__ == "__main__":
         splitText = []
 
         # Split text_sample into each word and add to splitText array
-        splitText = [w for w in re.split(r'[_-]+', text_sample) if w]
+        if not text_alt_split:
+            splitText = [w for w in re.split(r'[-_]+', text_sample) if w]
+        else:
+            splitText = [w for w in re.split(r',', text_sample) if w]
 
         # Get similarity score of each word and add each array result to each item in the final_arr
         # Each array item in final_arr is an array of data
@@ -84,7 +87,7 @@ if __name__ == "__main__":
             for word in likeness_result:
                 xml_match_element = xml_root.find(f".//word[@name='{word[3]}']")
 
-                if xml_match_element is not None:
+                if not xml_match_element is None:
                     SubElement(xml_match_element, "string").text = str(word[0])
                     SubElement(xml_match_element, "match").text = str(word[1])
                     SubElement(xml_match_element, "score").text = str(word[2])

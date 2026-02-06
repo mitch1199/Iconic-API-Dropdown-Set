@@ -1,18 +1,9 @@
-# Purpose: Takes input string values (comma separated) and matches them to values of a metadata multiselect dropdown field and sets the value
-#          of the metadata field to the input values found. If there are misspelled or non-matched input stirngs, a return message is
-#          contructed in HTML format.
-# Usage: python "Iconik-API_Asset_Metadata Dropdown Set.py" <APP_ID> <AUTH_TOKEN> <ASSET_ID> <INPUT_DROPDOWN_VALUES> <META_DATA_FIELD_NAME>
-#
-# Created: January 5, 2026
-# Last update: Feburary 3, 2026
-# Updated by: Mitchel Dalton
-#
-
 import requests, sys, json, subprocess, os
 import xml.etree.ElementTree as ET
 
 def similarity_check(xml_data, user_option):
     xml_root = ET.fromstring(xml_data)
+    matched_scores = []
 
     for elem in xml_root.findall(".//word"):
         elem_match = elem.find("match")
@@ -20,21 +11,28 @@ def similarity_check(xml_data, user_option):
         elem_score = elem.find("score")
 
         # Condition elem_match and elem_score
-        elem_match_value = elem_match.text.strip().lower() if elem_match is not None else "false"
-        elem_score_value = float(elem_score.text) if elem_score is not None else 0.0
-        elem_name_value = elem_word.strip().lower() if elem_word is not None else ""
+        elem_match_value = elem_match.text.strip().lower() if elem_match is not None or "" else "false" # type: ignore
+        elem_score_value = float(elem_score.text) if elem_score is not None or "" else 0.0 # type: ignore
+        elem_name_value = elem_word.strip().lower() if elem_word is not None or "" else "" # type: ignore
 
         if elem_match_value == "true" and elem_score_value >= 60.0:
-            for option in dropdown_field_options:
-                if option["label"].lower() == elem_name_value:
-                    message = ""
-                    if elem_score_value < 100.0:
-                        message = f'"{user_option}" is misspelled. Is it meant to be "{option["label"]}"?'
-                    return [True, option, message]
+            matched_scores.append((elem_match_value, elem_score_value, elem_name_value))
+
+    if matched_scores.__len__() > 0:
+        matched_scores.sort(key=lambda x: x[1], reverse=True)
+
+        top_match = matched_scores[0]
+        top_match_score = top_match[1]
+        top_match_name = top_match[2]
+
+        for option in dropdown_field_options:
+            if option["label"].lower() == top_match_name:
+                message = ""
+                if top_match_score < 100.0:
+                    message = f'"{user_option}" is misspelled. Is it meant to be "{option["label"]}"?'
+                return [True, option, message]
                 
     return [False, elem_word, ""]
-
-
 
 def create_html_message(message_list):
     if len(message_list) == 0:
