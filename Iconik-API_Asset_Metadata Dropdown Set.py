@@ -1,4 +1,4 @@
-import requests, sys, json, subprocess, os
+import requests, sys, json, subprocess, os, argparse
 import xml.etree.ElementTree as ET
 
 def similarity_check(xml_data, user_option):
@@ -56,11 +56,23 @@ def create_html_message(message_list):
     return message
 
 
-APP_ID = f'{sys.argv[1]}'
-AUTH_TOKEN = f'{sys.argv[2]}'
-ASSET_ID = f'{sys.argv[3]}'
-INPUT_DROPDOWN_VALUES = f'{sys.argv[4]}'
-META_DATA_FIELD_NAME = f'{sys.argv[5]}'
+parser = argparse.ArgumentParser(description="Updates dropdown metadata field values for an asset")
+parser.add_argument("-app-id", "--app-id", "-a", dest="APP_ID", type=str, required=True, help="Iconik App ID")
+parser.add_argument("-auth-token", "--auth-token", "-t", dest="AUTH_TOKEN", type=str, required=True, help="Iconik Auth Token")
+parser.add_argument("-asset-id", "--asset-id", "-i", dest="ASSET_ID", type=str, required=True, help="Iconik Asset ID to update metadata field values for")
+parser.add_argument("-dropdown-values", "--dropdown-values", "-v", dest="INPUT_DROPDOWN_VALUES", type=str, required=True, help="Comma-separated list of dropdown option values to update the metadata field with")
+parser.add_argument("-metadata-field-name", "--metadata-field-name", "-m", dest="META_DATA_FIELD_NAME", type=str, required=True, help="Metadata field name to update")
+
+args = parser.parse_args()
+
+if not args.APP_ID or not args.AUTH_TOKEN or not args.ASSET_ID or not args.INPUT_DROPDOWN_VALUES or not args.META_DATA_FIELD_NAME:
+    sys.exit(1)
+
+APP_ID = args.APP_ID
+AUTH_TOKEN = args.AUTH_TOKEN
+ASSET_ID = args.ASSET_ID
+INPUT_DROPDOWN_VALUES = args.INPUT_DROPDOWN_VALUES
+META_DATA_FIELD_NAME = args.META_DATA_FIELD_NAME
 
 headers = {
     'App-ID': APP_ID,
