@@ -113,10 +113,10 @@ for user_option in DROPDOWN_VALUES_input:
     sub_command = [
          sys.executable,
          os.path.join(os.path.dirname(__file__), "Word_Similar_Ratio_XML.py"),
-         user_option,
-         ",".join([option["label"] for option in dropdown_field_options]),
-         "true",
-         "true"
+         "-text", user_option,
+         "-list", ",".join([option["label"] for option in dropdown_field_options]),
+         "-test",
+         "-alt"
     ]
 
     sub_result = subprocess.run(sub_command, capture_output=True, text=True)
