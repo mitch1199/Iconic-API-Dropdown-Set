@@ -48,6 +48,15 @@ If there are dropdown values in ```-dropdown-values``` that are not found or mis
 
 ### Output
 XML Output
+```xml
+<matches>
+  <word name="_string_">
+    <string>_string_</string>
+    <match>_true/false_</match>
+    <score>_score_</score>
+  </word>
+</matches>
 ```
+```match``` will be ```true``` when ```score``` is greater than the set similarity percentage.
 
-```
+_Shown values are not actual output_
