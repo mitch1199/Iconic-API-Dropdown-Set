@@ -5,10 +5,7 @@ Update a metadata dropdown field using the Swagger API of Iconik. Input is verif
 * ```pip install -r requirements```
 * [Python 3.10+](https://www.python.org/downloads/) (older verisons may work but not tested)
 * Iconik account with admin privilages
-
-### To Do
-- [ ] Add argument parser to Word Similarity script
-
+  
 ## Usage
 ### Inputs
 ```
