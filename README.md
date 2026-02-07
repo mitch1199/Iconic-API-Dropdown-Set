@@ -58,3 +58,8 @@ XML Output
 ```match``` will be ```true``` when ```score``` is greater than the set similarity percentage.
 
 _Shown values are not actual output_
+
+<details>
+<summary>Vantage Workflow</summary>
+  This script works well with a (Telestream) Vantage-Iconik integrated workflow in upating multi-select dropdown metadata fields.
+</details>
