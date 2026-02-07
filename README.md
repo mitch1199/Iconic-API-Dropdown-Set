@@ -33,14 +33,15 @@ If there are dropdown values in ```-dropdown-values``` that are not found or mis
 ## Word Similarity script
 ### Usage
 ```
--text, --text, -t                |  String being tested
--text-source, --text-source, -s  |  Comma-delimited list with all strings to test against -text
--alt-split, --alt-split, -a      |  Opt : True/False [Default: False] : Use alternative text splitting method on -text-source
+-text, --text, -t  |  String being tested
+-list, --list, -l  |  Single or comma-seprated list of strings to compare against -text
+-test, --test, -t  |  Leave off to print XML output to console and exit
+-alt, --alt, -a    |  [Opt] Split -list by commas instead of dashes and underscores
 ```
 
 ### Example
 ```python
--text <STRING> -text-source <STRING> [-alt-split <TRUE-FALSE>]
+-text <STRING> -list <STRING> [-test -alt]
 ```
 
 ### Output
