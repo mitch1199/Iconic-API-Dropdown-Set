@@ -1,7 +1,15 @@
-import sys, re, json
+import sys, re, json, argparse
 from rapidfuzz import fuzz
 from decimal import Decimal, ROUND_HALF_UP
 from xml.etree.ElementTree import Element, SubElement, tostring
+
+parser =  argparse.ArgumentParser(description="Check spelling similarity of a string to a list of words and return an XML result.")
+parser.add_argument("-text", "--text", "-t", dest="text", help="String to compare", required=True)
+parser.add_argument("-list", "--list", "-l", dest="list", help="Single or comma separated list of strings to compare source string to", required=True)
+parser.add_argument("-test", "--test", dest="test", help="Output XML result to console if false; normal operation if true", action="store_true", required=False)
+parser.add_argument("-alt", "--alt", dest="alt", help="Use comma as split character for -list, true. False uses dash and underscore as split characters", action="store_true", required=False)
+
+args = parser.parse_args()
 
 # Use RapidFuzz to get score of similarity of the txt and the sample word comparing to
 def likeness(txt, sample, threshold=60.5):
@@ -24,17 +32,11 @@ def check_likeness(arr):
         #return word[0], word[1], int(score)
     return return_arr        
 
-if __name__ == "__main__":
-    # Checking argument count
-
-    if len(sys.argv) < 4:
-        print("Usage of this script requires a text value sent as an argument and a word to match.")
-        sys.exit(1)
-    
-    text_sample = sys.argv[1]
-    match_word = sys.argv[2].split(",")
-    testing = sys.argv[3].lower()
-    text_alt_split = sys.argv[4] if len(sys.argv) > 4 else False
+if __name__ == "__main__":    
+    text_sample = args.text
+    match_word = args.list.split(",")
+    testing = args.test
+    text_alt_split = args.alt
 
     # text_sample = "S2E3_Synopsis-Episode-Credit_v3"
     # match_word = "Synopsis,Credits,Music Sheet".split(",")
@@ -64,7 +66,7 @@ if __name__ == "__main__":
 
         # Print to console the final True/False value if there were any words that were similar to
         # the match_word
-        if (testing == "true"):
+        if (testing == True):
             likeness_result = check_likeness(final_arr)
 
             # Create the XML root of 'matches'
